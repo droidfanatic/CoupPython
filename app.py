@@ -70,6 +70,14 @@ class GameNamespace(Namespace):
         lobby["players"].remove(username)
         emit('player_left', {"players": lobby["players"]}, broadcast=True, namespace='/game')
 
+    def on_randomturn(self):
+        if 0 < game["playerCount"] <= lobby['max_players']:
+            game["currentPlayerTurn"] = random.randint(0, game["playerCount"] - 1)
+            print(game["currentPlayerTurn"])
+            emit('random_turn', {"turn": game["currentPlayerTurn"]}, namespace='/game')
+        else:
+            emit('random_turn', {"error": "number of players have to be at least 2 and at max 14"}, namespace='/game')
+
 
 socketio.on_namespace(GameNamespace('/game'))
 
